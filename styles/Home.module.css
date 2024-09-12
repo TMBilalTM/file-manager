@@ -110,30 +110,3 @@
     font-size: 2.5rem;
   }
 }
-
-/* Karanlık tema ayarları */
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: var(--dark-background);
-    color: var(--dark-text-color);
-  }
-
-  .footer {
-    border-color: #444;
-  }
-
-  .card {
-    background-color: #222;
-    border-color: #444;
-    color: var(--dark-text-color);
-  }
-
-  .code {
-    background: #333;
-    color: var(--dark-text-color);
-  }
-
-  .logo img {
-    filter: invert(1);
-  }
-}

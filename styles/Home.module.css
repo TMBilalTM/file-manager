@@ -1,12 +1,5 @@
 /* Genel ayarlar */
-:root {
-  --primary-color: #0070f3;
-  --secondary-color: #111;
-  --background-color: #f0f0f0;
-  --text-color: #333;
-  --dark-background: #181818;
-  --dark-text-color: #f0f0f0;
-}
+
 
 body {
   font-family: 'Inter', sans-serif;

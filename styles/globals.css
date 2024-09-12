@@ -1,31 +1,46 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Genel stil ayarları */
 html,
 body {
   padding: 0;
   margin: 0;
-  background-color: aliceblue;
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background-color: #f8f9fa; /* Daha modern ve nötr bir açık renk */
+  color: #333; /* Okunabilirliği artırmak için koyu gri renk */
 }
 
+/* Bağlantı stilleri */
 a {
   color: inherit;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
+a:hover {
+  color: #0070f3; /* Hover üzerinde modern bir mavi renk */
+}
+
+/* Varsayılan kutu modeli */
 * {
   box-sizing: border-box;
 }
 
+/* Karanlık tema ayarları */
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
   body {
-    color: white;
-    background: black;
+    background-color: #181818; /* Daha modern koyu bir arka plan rengi */
+    color: #e0e0e0; /* Karanlık temada okunabilirliği artırmak için hafif gri */
+  }
+
+  a:hover {
+    color: #66ccff; /* Karanlık temada mavi tonunu biraz daha açık yapıyoruz */
   }
 }

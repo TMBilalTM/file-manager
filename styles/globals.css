@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global renk değişkenleri */
 :root {
   --primary-color: #0070f3;
   --secondary-color: #111;
@@ -9,6 +11,7 @@
   --dark-background: #181818;
   --dark-text-color: #f0f0f0;
 }
+
 /* Genel stil ayarları */
 html,
 body {
@@ -17,8 +20,8 @@ body {
   height: 100%;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  background-color: #f8f9fa; /* Daha modern ve nötr bir açık renk */
-  color: #333; /* Okunabilirliği artırmak için koyu gri renk */
+  background-color: #f8f9fa; /* Nötr açık bir arka plan */
+  color: var(--text-color); /* Okunabilirliği artırmak için koyu gri */
 }
 
 /* Bağlantı stilleri */
@@ -29,7 +32,7 @@ a {
 }
 
 a:hover {
-  color: #0070f3; /* Hover üzerinde modern bir mavi renk */
+  color: var(--primary-color); /* Hover mavi tonuyla */
 }
 
 /* Varsayılan kutu modeli */
@@ -43,11 +46,11 @@ a:hover {
     color-scheme: dark;
   }
   body {
-    background-color: #181818; /* Daha modern koyu bir arka plan rengi */
-    color: #e0e0e0; /* Karanlık temada okunabilirliği artırmak için hafif gri */
+    background-color: var(--dark-background); /* Karanlık tema için arka plan */
+    color: var(--dark-text-color); /* Okunabilirliği artıran açık gri yazı rengi */
   }
 
   a:hover {
-    color: #66ccff; /* Karanlık temada mavi tonunu biraz daha açık yapıyoruz */
+    color: #66ccff; /* Karanlık temada daha açık bir mavi */
   }
 }

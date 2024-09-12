@@ -1,13 +1,7 @@
 /* Genel ayarlar */
 
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  margin: 0;
-  padding: 0;
-}
+
 
 .container {
   padding: 0 2rem;

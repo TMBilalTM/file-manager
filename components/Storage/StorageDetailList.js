@@ -1,31 +1,39 @@
+// StorageDetailList.js
 import React, { useEffect, useState } from 'react';
-import { firestore } from '../../Config/FirebaseConfig'; // Firebase yapılandırma dosyanızı import edin
+import { collection, getDocs } from 'firebase/firestore';
+import { firestore } from '../../Config/FirebaseConfig';
 import StorageDetailItem from './StorageDetailItem';
 
 function StorageDetailList() {
-    const [storageList, setStorageList] = useState([]);
+  const [storageList, setStorageList] = useState([]);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchStorageList = async () => {
-            try {
-                const storageCollection = await firestore.collection('storage').get();
-                const storageData = storageCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setStorageList(storageData);
-            } catch (error) {
-                console.error('Error fetching storage data:', error);
-            }
-        };
+  useEffect(() => {
+    const fetchStorageList = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(firestore, 'storage'));
+        const storageData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setStorageList(storageData);
+      } catch (error) {
+        console.error('Error fetching storage data:', error);
+        setError('Failed to fetch storage data.');
+      }
+    };
 
-        fetchStorageList();
-    }, []);
+    fetchStorageList();
+  }, []);
 
-    return (
-        <>
-            {storageList.map((item) => (
-                <StorageDetailItem item={item} key={item.id} />
-            ))}
-        </>
-    );
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  return (
+    <>
+      {storageList.map((item, index) => (
+        <StorageDetailItem item={item} key={index} />
+      ))}
+    </>
+  );
 }
 
 export default StorageDetailList;

@@ -11,45 +11,43 @@ function UploadFileModal({ closeModal }) {
   const { parentFolderId } = useContext(ParentFolderIdContext);
   const { setShowToastMsg } = useContext(ShowToastContext);
 
-  const docId = Date.now();
   const db = getFirestore(app);
   const storage = getStorage(app);
 
   const onFileUpload = async (file) => {
     if (file) {
       // Dosya boyutu kontrolü
-      if (file?.size > 1000000) {
+      if (file.size > 1000000) {
         setShowToastMsg("File is too large");
         return;
       }
 
-      const fileRef = ref(storage, "file/" + file.name);
+      const fileRef = ref(storage, `file/${file.name}`);
       console.log("File upload initiated");
 
-      uploadBytes(fileRef, file)
-        .then(() => {
-          console.log("File uploaded to Firebase Storage");
-          return getDownloadURL(fileRef);
-        })
-        .then(async (downloadURL) => {
-          console.log("File available at", downloadURL);
-          await setDoc(doc(db, "files", docId.toString()), {
-            name: file.name,
-            type: file.name.split(".")[1],
-            size: file.size,
-            modifiedAt: file.lastModified,
-            createdBy: session.user.email,
-            parentFolderId: parentFolderId,
-            imageUrl: downloadURL,
-            id: docId,
-          });
-          closeModal(true);
-          setShowToastMsg("File Uploaded Successfully!");
-        })
-        .catch((error) => {
-          console.error("Error uploading file:", error);
-          setShowToastMsg("Failed to upload file. Please try again.");
+      try {
+        await uploadBytes(fileRef, file);
+        console.log("File uploaded to Firebase Storage");
+        
+        const downloadURL = await getDownloadURL(fileRef);
+        console.log("File available at", downloadURL);
+        
+        await setDoc(doc(db, "files", Date.now().toString()), {
+          name: file.name,
+          type: file.name.split(".").pop(), // Dosya uzantısını al
+          size: file.size,
+          modifiedAt: file.lastModified,
+          createdBy: session.user.email,
+          parentFolderId: parentFolderId,
+          imageUrl: downloadURL,
         });
+
+        closeModal(true);
+        setShowToastMsg("File Uploaded Successfully!");
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        setShowToastMsg("Failed to upload file. Please try again.");
+      }
     }
   };
 

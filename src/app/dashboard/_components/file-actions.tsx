@@ -1,4 +1,6 @@
-import { Doc, Id } from "../../../../convex/_generated/dataModel";
+"use client";
+
+import { Doc } from "../../../../convex/_generated/dataModel";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,25 +50,23 @@ export function FileCardActions({
   return (
     <>
       <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-sm mx-auto p-6 rounded-lg bg-white shadow-lg">
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action will mark the file for our deletion process. Files are
-              deleted periodically
+            <AlertDialogTitle className="text-xl font-semibold">Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-700">
+              This action will mark the file for deletion. Files are deleted periodically.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogFooter className="flex justify-between">
+            <AlertDialogCancel className="bg-gray-200 text-gray-800 hover:bg-gray-300">Cancel</AlertDialogCancel>
             <AlertDialogAction
+              className="bg-red-600 text-white hover:bg-red-700"
               onClick={async () => {
-                await deleteFile({
-                  fileId: file._id,
-                });
+                await deleteFile({ fileId: file._id });
                 toast({
                   variant: "default",
                   title: "File marked for deletion",
-                  description: "Your file will be deleted soon",
+                  description: "Your file will be deleted soon.",
                 });
               }}
             >
@@ -77,68 +77,58 @@ export function FileCardActions({
       </AlertDialog>
 
       <DropdownMenu>
-        <DropdownMenuTrigger>
-          <MoreVertical />
+        <DropdownMenuTrigger className="flex items-center p-2 rounded-md hover:bg-gray-100">
+          <MoreVertical className="w-5 h-5 text-gray-600" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="w-48 p-2 bg-white shadow-lg rounded-lg">
           <DropdownMenuItem
             onClick={() => {
               if (!file.url) return;
               window.open(file.url, "_blank");
             }}
-            className="flex gap-1 items-center cursor-pointer"
+            className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"
           >
-            <FileIcon className="w-4 h-4" /> Download
+            <FileIcon className="w-4 h-4 text-gray-600" /> Download
           </DropdownMenuItem>
 
           <DropdownMenuItem
             onClick={() => {
-              toggleFavorite({
-                fileId: file._id,
-              });
+              toggleFavorite({ fileId: file._id });
             }}
-            className="flex gap-1 items-center cursor-pointer"
+            className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"
           >
             {isFavorited ? (
-              <div className="flex gap-1 items-center">
+              <div className="flex items-center gap-2 text-yellow-500">
                 <StarIcon className="w-4 h-4" /> Unfavorite
               </div>
             ) : (
-              <div className="flex gap-1 items-center">
+              <div className="flex items-center gap-2 text-gray-600">
                 <StarHalf className="w-4 h-4" /> Favorite
               </div>
             )}
           </DropdownMenuItem>
 
           <Protect
-            condition={(check) => {
-              return (
-                check({
-                  role: "org:admin",
-                }) || file.userId === me?._id
-              );
-            }}
+            condition={(check) => check({ role: "org:admin" }) || file.userId === me?._id}
             fallback={<></>}
           >
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
                 if (file.shouldDelete) {
-                  restoreFile({
-                    fileId: file._id,
-                  });
+                  restoreFile({ fileId: file._id });
                 } else {
                   setIsConfirmOpen(true);
                 }
               }}
-              className="flex gap-1 items-center cursor-pointer"
+              className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"
             >
               {file.shouldDelete ? (
-                <div className="flex gap-1 text-green-600 items-center cursor-pointer">
+                <div className="flex items-center gap-2 text-green-600">
                   <UndoIcon className="w-4 h-4" /> Restore
                 </div>
               ) : (
-                <div className="flex gap-1 text-red-600 items-center cursor-pointer">
+                <div className="flex items-center gap-2 text-red-600">
                   <TrashIcon className="w-4 h-4" /> Delete
                 </div>
               )}

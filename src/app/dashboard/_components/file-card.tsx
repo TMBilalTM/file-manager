@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatRelative } from "date-fns";
-
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { FileTextIcon, GanttChartIcon, ImageIcon } from "lucide-react";
 import { ReactNode } from "react";
@@ -26,39 +25,40 @@ export function FileCard({
   });
 
   const typeIcons = {
-    image: <ImageIcon />,
-    pdf: <FileTextIcon />,
-    csv: <GanttChartIcon />,
+    image: <ImageIcon className="text-gray-500" />,
+    pdf: <FileTextIcon className="text-gray-500" />,
+    csv: <GanttChartIcon className="text-gray-500" />,
   } as Record<Doc<"files">["type"], ReactNode>;
 
   return (
-    <Card>
-      <CardHeader className="relative">
-        <CardTitle className="flex gap-2 text-base font-normal">
-          <div className="flex justify-center">{typeIcons[file.type]}</div>{" "}
+    <Card className="bg-white shadow-md rounded-lg overflow-hidden">
+      <CardHeader className="relative p-4 border-b border-gray-200">
+        <CardTitle className="flex items-center gap-3 text-lg font-semibold text-gray-800">
+          <div className="flex justify-center items-center w-8 h-8 rounded-full bg-gray-100">
+            {typeIcons[file.type]}
+          </div>{" "}
           {file.name}
         </CardTitle>
-        <div className="absolute top-2 right-2">
+        <div className="absolute top-4 right-4">
           <FileCardActions isFavorited={file.isFavorited} file={file} />
         </div>
       </CardHeader>
-      <CardContent className="h-[200px] flex justify-center items-center">
+      <CardContent className="p-4 flex justify-center items-center">
         {file.type === "image" && file.url && (
-          <Image alt={file.name} width="200" height="100" src={file.url} />
+          <Image alt={file.name} width={200} height={100} src={file.url} className="object-cover rounded-lg" />
         )}
-
-        {file.type === "csv" && <GanttChartIcon className="w-20 h-20" />}
-        {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
+        {file.type === "csv" && <GanttChartIcon className="w-16 h-16 text-gray-500" />}
+        {file.type === "pdf" && <FileTextIcon className="w-16 h-16 text-gray-500" />}
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <div className="flex gap-2 text-xs text-gray-700 w-40 items-center">
-          <Avatar className="w-6 h-6">
-            <AvatarImage src={userProfile?.image} />
+      <CardFooter className="flex justify-between p-4 bg-gray-50 border-t border-gray-200">
+        <div className="flex items-center gap-2 text-sm text-gray-700">
+          <Avatar className="w-8 h-8 border border-gray-300">
+            <AvatarImage src={userProfile?.image} className="object-cover" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           {userProfile?.name}
         </div>
-        <div className="text-xs text-gray-700">
+        <div className="text-sm text-gray-500">
           Uploaded on {formatRelative(new Date(file._creationTime), new Date())}
         </div>
       </CardFooter>

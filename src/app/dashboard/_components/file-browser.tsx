@@ -23,14 +23,15 @@ import { Label } from "@/components/ui/label";
 
 function Placeholder() {
   return (
-    <div className="flex flex-col gap-8 w-full items-center mt-24">
+    <div className="flex flex-col gap-6 w-full items-center mt-24">
       <Image
-        alt="an image of a picture and directory icon"
-        width="300"
-        height="300"
+        alt="No files"
+        width={250}
+        height={250}
         src="/empty.svg"
+        className="opacity-70"
       />
-      <div className="text-2xl">You have no files, upload one now</div>
+      <div className="text-2xl font-semibold text-gray-600">No files found</div>
       <UploadButton />
     </div>
   );
@@ -75,77 +76,83 @@ export function FileBrowser({
   const isLoading = files === undefined;
 
   const modifiedFiles =
-  files?.map((file) => ({
-    ...file,
-    isFavorited: (favorites ?? []).some(
-      (favorite) => favorite.fileId === file._id
-    ),
-    url: file.url ?? null, // url alanını ekleyin
-  })) ?? [];
+    files?.map((file) => ({
+      ...file,
+      isFavorited: (favorites ?? []).some(
+        (favorite) => favorite.fileId === file._id
+      ),
+      url: file.url ?? null, // Add url field
+    })) ?? [];
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">{title}</h1>
+    <div className="p-4 bg-gray-100 min-h-screen">
+      <div className="flex justify-between items-center mb-8 bg-white p-4 shadow-md rounded-lg">
+        <h1 className="text-3xl font-bold text-gray-800">{title}</h1>
 
-        <SearchBar query={query} setQuery={setQuery} />
-
-        <UploadButton />
+        <div className="flex items-center gap-4">
+          <SearchBar query={query} setQuery={setQuery} />
+          <UploadButton />
+        </div>
       </div>
 
-      <Tabs defaultValue="grid">
-        <div className="flex justify-between items-center">
-          <TabsList className="mb-2">
-            <TabsTrigger value="grid" className="flex gap-2 items-center">
-              <GridIcon />
-              Grid
-            </TabsTrigger>
-            <TabsTrigger value="table" className="flex gap-2 items-center">
-              <RowsIcon /> Table
-            </TabsTrigger>
-          </TabsList>
+      <Tabs defaultValue="grid" className="bg-white p-4 rounded-lg shadow-md">
+        <TabsList className="flex items-center mb-4 border-b border-gray-200">
+          <TabsTrigger
+            value="grid"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition"
+          >
+            <GridIcon className="w-5 h-5" />
+            Grid
+          </TabsTrigger>
+          <TabsTrigger
+            value="table"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition"
+          >
+            <RowsIcon className="w-5 h-5" />
+            Table
+          </TabsTrigger>
+        </TabsList>
 
-          <div className="flex gap-2 items-center">
-            <Label htmlFor="type-select">Type Filter</Label>
-            <Select
-              value={type}
-              onValueChange={(newType) => {
-                setType(newType as any);
-              }}
-            >
-              <SelectTrigger id="type-select" className="w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="image">Image</SelectItem>
-                <SelectItem value="csv">CSV</SelectItem>
-                <SelectItem value="pdf">PDF</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="flex items-center gap-4 mb-4">
+          <Label htmlFor="type-select" className="text-gray-700">
+            Type Filter
+          </Label>
+          <Select
+            value={type}
+            onValueChange={(newType) => {
+              setType(newType as any);
+            }}
+          >
+            <SelectTrigger id="type-select" className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="image">Image</SelectItem>
+              <SelectItem value="csv">CSV</SelectItem>
+              <SelectItem value="pdf">PDF</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {isLoading && (
-          <div className="flex flex-col gap-8 w-full items-center mt-24">
-            <Loader2 className="h-32 w-32 animate-spin text-gray-500" />
-            <div className="text-2xl">Loading your files...</div>
+          <div className="flex flex-col gap-6 items-center mt-24">
+            <Loader2 className="h-32 w-32 animate-spin text-gray-600" />
+            <div className="text-2xl font-semibold text-gray-600">Loading files...</div>
           </div>
         )}
 
-        <TabsContent value="grid">
-          <div className="grid grid-cols-3 gap-4">
-            {modifiedFiles?.map((file) => {
-              return <FileCard key={file._id} file={file} />;
-            })}
-          </div>
+        <TabsContent value="grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {modifiedFiles?.map((file) => (
+            <FileCard key={file._id} file={file} />
+          ))}
         </TabsContent>
         <TabsContent value="table">
           <DataTable columns={columns} data={modifiedFiles} />
         </TabsContent>
       </Tabs>
 
-      {files?.length === 0 && <Placeholder />}
+      {files?.length === 0 && !isLoading && <Placeholder />}
     </div>
   );
 }

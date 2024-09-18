@@ -21,7 +21,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -30,26 +29,27 @@ import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { Doc } from "../../../../convex/_generated/dataModel";
 
-// Allowed file types including ZIP
+// Allowed file types
 const allowedFileTypes = [
   "image/png",
   "image/jpeg",
   "image/webp",
   "application/pdf",
   "text/csv",
-  "application/zip",
+  "application/zip"
 ];
 
-const MAX_FILE_SIZE_MB = 5; // Maximum file size in MB
-const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024; // Convert MB to bytes
+// File size limit (5MB)
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
+// Form schema
 const formSchema = z.object({
   title: z.string().min(1).max(200),
   file: z
     .custom<FileList>((val) => val instanceof FileList, "File is required")
     .refine((files) => files.length > 0, "File is required")
     .refine((files) => allowedFileTypes.includes(files[0].type), "Invalid file type. Allowed types: PNG, JPEG, WEBP, PDF, CSV, ZIP.")
-    .refine((files) => files[0].size <= MAX_FILE_SIZE, `File size exceeds ${MAX_FILE_SIZE_MB}MB limit.`),
+    .refine((files) => files[0].size <= MAX_FILE_SIZE, "File size must not exceed 5 MB."),
 });
 
 export function UploadButton() {
@@ -57,6 +57,7 @@ export function UploadButton() {
   const organization = useOrganization();
   const user = useUser();
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+  const createFile = useMutation(api.files.createFile);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -76,11 +77,6 @@ export function UploadButton() {
 
       const fileType = values.file[0].type;
 
-      // Check file type again before uploading
-      if (!allowedFileTypes.includes(fileType)) {
-        throw new Error("Invalid file type.");
-      }
-
       const result = await fetch(postUrl, {
         method: "POST",
         headers: { "Content-Type": fileType },
@@ -93,20 +89,21 @@ export function UploadButton() {
 
       const { storageId } = await result.json();
 
-      const types = {
+      // Use `Record<string, string>` to define file types
+      const types: Record<string, "image" | "pdf" | "csv" | "zip"> = {
         "image/png": "image",
         "image/jpeg": "image",
         "image/webp": "image",
         "application/pdf": "pdf",
         "text/csv": "csv",
-        "application/zip": "zip", // Added ZIP type
-      } as Record<string, Doc<"files">["type"]>;
+        "application/zip": "zip",
+      };
 
       await createFile({
         name: values.title,
         fileId: storageId,
         orgId,
-        type: types[fileType],
+        type: types[fileType as keyof typeof types],
       });
 
       form.reset();
@@ -133,8 +130,6 @@ export function UploadButton() {
   }
 
   const [isFileDialogOpen, setIsFileDialogOpen] = useState(false);
-
-  const createFile = useMutation(api.files.createFile);
 
   return (
     <Dialog

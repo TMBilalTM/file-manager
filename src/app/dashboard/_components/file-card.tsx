@@ -8,7 +8,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatRelative } from "date-fns";
 import { Doc } from "../../../../convex/_generated/dataModel";
-import { FileTextIcon, GanttChartIcon, ImageIcon } from "lucide-react";
+import { FileIcon, FileTextIcon, Folder, GanttChartIcon, ImageIcon, ZapIcon } from "lucide-react";
 import { ReactNode } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -28,6 +28,8 @@ export function FileCard({
     image: <ImageIcon className="text-gray-500" />,
     pdf: <FileTextIcon className="text-gray-500" />,
     csv: <GanttChartIcon className="text-gray-500" />,
+    zip: <Folder className="text-gray-500" />,
+
   } as Record<Doc<"files">["type"], ReactNode>;
 
   return (
@@ -49,6 +51,7 @@ export function FileCard({
         )}
         {file.type === "csv" && <GanttChartIcon className="w-16 h-16 text-gray-500" />}
         {file.type === "pdf" && <FileTextIcon className="w-16 h-16 text-gray-500" />}
+        {file.type === "zip" && <Folder className="w-16 h-16 text-gray-500" />}
       </CardContent>
       <CardFooter className="flex justify-between p-4 bg-gray-50 border-t border-gray-200">
         <div className="flex items-center gap-2 text-sm text-gray-700">

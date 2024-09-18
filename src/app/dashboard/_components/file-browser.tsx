@@ -1,4 +1,5 @@
 "use client";
+
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -23,15 +24,15 @@ import { Label } from "@/components/ui/label";
 
 function Placeholder() {
   return (
-    <div className="flex flex-col gap-6 w-full items-center mt-24">
+    <div className="flex flex-col gap-6 items-center mt-24">
       <Image
         alt="No files"
         width={250}
         height={250}
         src="/empty.svg"
-        className="opacity-70"
+        className="opacity-60"
       />
-      <div className="text-2xl font-semibold text-gray-600">No files found</div>
+      <div className="text-xl font-medium text-gray-600">No files found</div>
       <UploadButton />
     </div>
   );
@@ -85,17 +86,17 @@ export function FileBrowser({
     })) ?? [];
 
   return (
-    <div className="p-4 bg-gray-100 min-h-screen">
-      <div className="flex justify-between items-center mb-8 bg-white p-4 shadow-md rounded-lg">
-        <h1 className="text-3xl font-bold text-gray-800">{title}</h1>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 bg-white p-6 shadow-lg rounded-lg">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-0">{title}</h1>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row items-center gap-4">
           <SearchBar query={query} setQuery={setQuery} />
           <UploadButton />
         </div>
       </div>
 
-      <Tabs defaultValue="grid" className="bg-white p-4 rounded-lg shadow-md">
+      <Tabs defaultValue="grid" className="bg-white p-6 rounded-lg shadow-lg">
         <TabsList className="flex items-center mb-4 border-b border-gray-200">
           <TabsTrigger
             value="grid"
@@ -138,7 +139,7 @@ export function FileBrowser({
         {isLoading && (
           <div className="flex flex-col gap-6 items-center mt-24">
             <Loader2 className="h-32 w-32 animate-spin text-gray-600" />
-            <div className="text-2xl font-semibold text-gray-600">Loading files...</div>
+            <div className="text-xl font-medium text-gray-600">Loading files...</div>
           </div>
         )}
 

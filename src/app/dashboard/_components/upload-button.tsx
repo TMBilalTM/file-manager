@@ -27,17 +27,16 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
-import { Doc } from "../../../../convex/_generated/dataModel";
 
 // Allowed file types
-const allowedFileTypes = [
-  "image/png",
-  "image/jpeg",
-  "image/webp",
-  "application/pdf",
-  "text/csv",
-  "application/zip"
-];
+const allowedFileTypes: Record<string, "image" | "pdf" | "csv" | "zip"> = {
+  "image/png": "image",
+  "image/jpeg": "image",
+  "image/webp": "image",
+  "application/pdf": "pdf",
+  "text/csv": "csv",
+  "application/zip": "zip",
+};
 
 // File size limit (5MB)
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
@@ -48,7 +47,7 @@ const formSchema = z.object({
   file: z
     .custom<FileList>((val) => val instanceof FileList, "File is required")
     .refine((files) => files.length > 0, "File is required")
-    .refine((files) => allowedFileTypes.includes(files[0].type), "Invalid file type. Allowed types: PNG, JPEG, WEBP, PDF, CSV, ZIP.")
+    .refine((files) => allowedFileTypes[files[0].type] !== undefined, "Invalid file type. Allowed types: PNG, JPEG, WEBP, PDF, CSV, ZIP.")
     .refine((files) => files[0].size <= MAX_FILE_SIZE, "File size must not exceed 5 MB."),
 });
 
@@ -89,21 +88,14 @@ export function UploadButton() {
 
       const { storageId } = await result.json();
 
-      // Use `Record<string, string>` to define file types
-      const types: Record<string, "image" | "pdf" | "csv" | "zip"> = {
-        "image/png": "image",
-        "image/jpeg": "image",
-        "image/webp": "image",
-        "application/pdf": "pdf",
-        "text/csv": "csv",
-        "application/zip": "zip",
-      };
+      // Use `allowedFileTypes` to define file types
+      const type = allowedFileTypes[fileType] ?? "unknown";
 
       await createFile({
         name: values.title,
         fileId: storageId,
         orgId,
-        type: types[fileType as keyof typeof types],
+        type,
       });
 
       form.reset();

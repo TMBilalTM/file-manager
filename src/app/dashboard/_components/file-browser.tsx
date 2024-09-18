@@ -22,6 +22,20 @@ import {
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { Label } from "@/components/ui/label";
 
+// SkeletonLoader bileşeni burada
+const SkeletonLoader = ({ type }: { type: 'card' | 'table' }) => {
+  return (
+    <div className={`flex flex-col gap-6 items-center mt-24 ${type === 'card' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' : ''}`}>
+      {Array.from({ length: type === 'card' ? 6 : 3 }).map((_, index) => (
+        <div
+          key={index}
+          className={`w-full ${type === 'card' ? 'h-40' : 'h-40'} bg-gray-300 animate-pulse rounded-lg`}
+        ></div>
+      ))}
+    </div>
+  );
+};
+
 function Placeholder() {
   return (
     <div className="flex flex-col gap-6 items-center mt-24">
@@ -137,23 +151,25 @@ export function FileBrowser({
         </div>
 
         {isLoading && (
-          <div className="flex flex-col gap-6 items-center mt-24">
-            <Loader2 className="h-32 w-32 animate-spin text-gray-600" />
-            <div className="text-xl font-medium text-gray-600">Loading files...</div>
-          </div>
+          <SkeletonLoader type={type === "all" ? "card" : "table"} />
         )}
 
         <TabsContent value="grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {modifiedFiles?.map((file) => (
-            <FileCard key={file._id} file={file} />
-          ))}
+          {modifiedFiles.length > 0 ? (
+            modifiedFiles.map((file) => <FileCard key={file._id} file={file} />)
+          ) : (
+            !isLoading && <Placeholder />
+          )}
         </TabsContent>
+
         <TabsContent value="table">
-          <DataTable columns={columns} data={modifiedFiles} />
+          {isLoading ? (
+            <SkeletonLoader type="table" />
+          ) : (
+            <DataTable columns={columns} data={modifiedFiles} />
+          )}
         </TabsContent>
       </Tabs>
-
-      {files?.length === 0 && !isLoading && <Placeholder />}
     </div>
   );
 }

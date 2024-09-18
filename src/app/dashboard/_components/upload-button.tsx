@@ -23,7 +23,6 @@ import {
 } from "@/components/ui/dialog";
 
 import { z } from "zod";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -31,14 +30,26 @@ import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { Doc } from "../../../../convex/_generated/dataModel";
 
-const allowedFileTypes = ["image/png", "image/jpeg", "image/webp", "application/pdf", "text/csv"];
+// Allowed file types including ZIP
+const allowedFileTypes = [
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "application/pdf",
+  "text/csv",
+  "application/zip",
+];
+
+const MAX_FILE_SIZE_MB = 5; // Maximum file size in MB
+const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024; // Convert MB to bytes
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
   file: z
     .custom<FileList>((val) => val instanceof FileList, "File is required")
     .refine((files) => files.length > 0, "File is required")
-    .refine((files) => allowedFileTypes.includes(files[0].type), "Invalid file type. Allowed types: PNG, JPEG, WEBP, PDF, CSV."),
+    .refine((files) => allowedFileTypes.includes(files[0].type), "Invalid file type. Allowed types: PNG, JPEG, WEBP, PDF, CSV, ZIP.")
+    .refine((files) => files[0].size <= MAX_FILE_SIZE, `File size exceeds ${MAX_FILE_SIZE_MB}MB limit.`),
 });
 
 export function UploadButton() {
@@ -65,6 +76,11 @@ export function UploadButton() {
 
       const fileType = values.file[0].type;
 
+      // Check file type again before uploading
+      if (!allowedFileTypes.includes(fileType)) {
+        throw new Error("Invalid file type.");
+      }
+
       const result = await fetch(postUrl, {
         method: "POST",
         headers: { "Content-Type": fileType },
@@ -83,6 +99,7 @@ export function UploadButton() {
         "image/webp": "image",
         "application/pdf": "pdf",
         "text/csv": "csv",
+        "application/zip": "zip", // Added ZIP type
       } as Record<string, Doc<"files">["type"]>;
 
       await createFile({

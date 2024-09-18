@@ -21,34 +21,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { z } from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import { Doc } from "../../../../convex/_generated/dataModel";
 
-// Allowed file types
-const allowedFileTypes: Record<string, "image" | "pdf" | "csv" | "zip"> = {
-  "image/png": "image",
-  "image/jpeg": "image",
-  "image/webp": "image",
-  "application/pdf": "pdf",
-  "text/csv": "csv",
-  "application/zip": "zip",
-};
+const allowedFileTypes = ["image/png", "image/jpeg", "image/webp", "application/pdf", "text/csv"];
 
-// File size limit (5MB)
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-
-// Form schema
 const formSchema = z.object({
   title: z.string().min(1).max(200),
   file: z
     .custom<FileList>((val) => val instanceof FileList, "File is required")
     .refine((files) => files.length > 0, "File is required")
-    .refine((files) => allowedFileTypes[files[0].type] !== undefined, "Invalid file type. Allowed types: PNG, JPEG, WEBP, PDF, CSV, ZIP.")
-    .refine((files) => files[0].size <= MAX_FILE_SIZE, "File size must not exceed 5 MB."),
+    .refine((files) => allowedFileTypes.includes(files[0].type), "Invalid file type. Allowed types: PNG, JPEG, WEBP, PDF, CSV."),
 });
 
 export function UploadButton() {
@@ -56,7 +46,6 @@ export function UploadButton() {
   const organization = useOrganization();
   const user = useUser();
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
-  const createFile = useMutation(api.files.createFile);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -88,14 +77,19 @@ export function UploadButton() {
 
       const { storageId } = await result.json();
 
-      // Use `allowedFileTypes` to define file types
-      const type = allowedFileTypes[fileType] ?? "unknown";
+      const types = {
+        "image/png": "image",
+        "image/jpeg": "image",
+        "image/webp": "image",
+        "application/pdf": "pdf",
+        "text/csv": "csv",
+      } as Record<string, Doc<"files">["type"]>;
 
       await createFile({
         name: values.title,
         fileId: storageId,
         orgId,
-        type,
+        type: types[fileType],
       });
 
       form.reset();
@@ -122,6 +116,8 @@ export function UploadButton() {
   }
 
   const [isFileDialogOpen, setIsFileDialogOpen] = useState(false);
+
+  const createFile = useMutation(api.files.createFile);
 
   return (
     <Dialog

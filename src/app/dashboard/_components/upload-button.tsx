@@ -31,11 +31,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { Doc } from "../../../../convex/_generated/dataModel";
 
+const allowedFileTypes = ["image/png", "image/jpeg", "image/webp", "application/pdf", "text/csv"];
+
 const formSchema = z.object({
   title: z.string().min(1).max(200),
   file: z
-    .custom<FileList>((val) => val instanceof FileList, "Required")
-    .refine((files) => files.length > 0, `Required`),
+    .custom<FileList>((val) => val instanceof FileList, "File is required")
+    .refine((files) => files.length > 0, "File is required")
+    .refine((files) => allowedFileTypes.includes(files[0].type), "Invalid file type. Allowed types: PNG, JPEG, WEBP, PDF, CSV."),
 });
 
 export function UploadButton() {
@@ -57,24 +60,31 @@ export function UploadButton() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!orgId) return;
 
-    const postUrl = await generateUploadUrl();
-
-    const fileType = values.file[0].type;
-
-    const result = await fetch(postUrl, {
-      method: "POST",
-      headers: { "Content-Type": fileType },
-      body: values.file[0],
-    });
-    const { storageId } = await result.json();
-
-    const types = {
-      "image/png": "image",
-      "application/pdf": "pdf",
-      "text/csv": "csv",
-    } as Record<string, Doc<"files">["type"]>;
-
     try {
+      const postUrl = await generateUploadUrl();
+
+      const fileType = values.file[0].type;
+
+      const result = await fetch(postUrl, {
+        method: "POST",
+        headers: { "Content-Type": fileType },
+        body: values.file[0],
+      });
+
+      if (!result.ok) {
+        throw new Error("Failed to upload file");
+      }
+
+      const { storageId } = await result.json();
+
+      const types = {
+        "image/png": "image",
+        "image/jpeg": "image",
+        "image/webp": "image",
+        "application/pdf": "pdf",
+        "text/csv": "csv",
+      } as Record<string, Doc<"files">["type"]>;
+
       await createFile({
         name: values.title,
         fileId: storageId,
@@ -83,7 +93,6 @@ export function UploadButton() {
       });
 
       form.reset();
-
       setIsFileDialogOpen(false);
 
       toast({
@@ -92,10 +101,11 @@ export function UploadButton() {
         description: "Now everyone can view your file",
       });
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
       toast({
         variant: "destructive",
-        title: "Something went wrong",
-        description: "Your file could not be uploaded, try again later",
+        title: "Upload Failed",
+        description: errorMessage,
       });
     }
   }

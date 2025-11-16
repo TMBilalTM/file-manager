@@ -1,104 +1,114 @@
-📂 Drive (file-manager)
+# 📂 Drive (file-manager)
 
-Modern, minimal bir kişisel bulut sürücü / dosya yöneticisi.
-Dosyalarını tarayıcı üzerinden yükle, listele, ara ve yönet – hepsi Next.js + Convex altyapısı ile.
+Modern, minimal ve hızlı bir **kişisel bulut sürücü / dosya yöneticisi**.  
+Dosyalarını yükle, düzenle, ara ve yönet — hepsi Next.js + Convex + Tailwind altyapısı ile.
 
-🔗 Canlı Demo: https://file-bilaltm.vercel.app
+> 🔗 **Canlı Demo:** https://file-bilaltm.vercel.app
 
-✨ Özellikler
+---
 
-📁 Dosya yükleme & listeleme
-Dosyaları hızlıca yükleyebilir, isim, tarih veya türlerine göre görüntüleyebilirsin.
+## ✨ Özellikler
 
-🔍 Arama & filtreleme
-Gerçek zamanlı arama ile dosyaları kolayca bul.
+- 📁 **Dosya Yükleme & Yönetme**  
+  Hızlı yükleme, boyut bilgisi, detaylar ve listeleme.
 
-⚡ Reaktif backend (Convex)
-Veri güncellemeleri anında arayüzde görünür — ekstra refresh gerekmez.
+- 🔍 **Gerçek Zamanlı Arama**  
+  Dosyaları anında filtrele, hızlı eriş.
 
-🎨 Modern UI
-Next.js App Router + Tailwind CSS (ve opsiyonel shadcn/ui) ile temiz, minimalist tasarım.
+- ⚡ **Convex Backend**  
+  API, veri ve işlemler tamamen reaktif. Sayfa yenilemeye gerek yok.
 
-🌓 (Opsiyonel) Karanlık / aydınlık tema
-Tailwind temaları ile tamamen özelleştirilebilir.
+- 🎨 **Modern Arayüz**  
+  Tailwind + shadcn/ui (opsiyonel) ile temiz, responsive UI.
 
-🔐 (Planlanan) Paylaşılan dosyalar & klasörler
+- 🌓 **Aydınlık / Karanlık Tema (opsiyonel)**
 
-“Shared with me” sayfası
+- 📤 **Geliştirilmesi Planlananlar**
+  - Shared with me (Benimle paylaşılanlar)
+  - Klasör yapısı
+  - Landing Page
+  - Gelişmiş izin sistemi
 
-Klasör desteği
+---
 
-Landing page
+## 🧱 Teknoloji Yığını
 
-🧭 Bu repo şu an fonksiyonel bir “Drive” temeli sunar; TODO kısmındaki maddeler ile genişletilebilir.
+| Teknoloji | Açıklama |
+|----------|----------|
+| **Next.js 14+** | App Router ile modern full-stack yapı |
+| **TypeScript** | Tip güvenli proje |
+| **Convex** | Reaktif, serverless backend |
+| **Tailwind CSS** | Modern utility-first stil |
+| **shadcn/ui** (opsiyonel) | Minimal UI componentleri |
 
-🧱 Teknoloji Yığını
+---
 
-Next.js — Modern full-stack React framework
+## 📁 Proje Yapısı
 
-TypeScript — Güçlü tip güvenliği
-
-Convex — Reaktif ve serverless veri katmanı
-
-Tailwind CSS — Hızlı, utility-tabanlı stil
-
-(Opsiyonel) shadcn/ui — Modern UI component kütüphanesi
-
-📁 Proje Yapısı
+```txt
 file-manager/
-├─ convex/           # Convex backend (schema, queries, mutations)
-├─ public/           # Statik dosyalar (ikonlar, görseller)
+├─ convex/           # Convex backend: queries, mutations, schema
+├─ public/           # Statik dosyalar
 ├─ src/
 │  ├─ app/          # Next.js App Router sayfaları
-│  ├─ components/   # UI bileşenleri
-│  ├─ lib/          # Yardımcı fonksiyonlar / clientlar
-│  └─ styles/       # Global stil dosyaları
-├─ .github/          # Github Actions veya template’ler
+│  ├─ components/   # Ortak UI bileşenleri
+│  ├─ lib/          # Yardımcı fonksiyonlar
+│  └─ styles/       # Global stiller
 ├─ components.json   # shadcn/ui config
 ├─ tailwind.config.ts
 ├─ next.config.mjs
 ├─ package.json
 └─ README.md
+```
 
-🚀 Kurulum & Çalıştırma
-1. Depoyu klonla
+---
+
+## 🚀 Kurulum
+
+### 1️⃣ Depoyu klonla
+
+```bash
 git clone https://github.com/TMBilalTM/file-manager.git
 cd file-manager
+```
 
-2. Bağımlılıkları yükle
+### 2️⃣ Bağımlılıkları yükle
+
+```bash
 npm install
 # veya
 yarn
 # veya
 pnpm install
-# veya
-bun install
+```
 
-3. Convex yapılandırması
+### 3️⃣ Convex başlat
 
-Convex kullanımı için bir deployment oluştur:
-
+```bash
 npm install -g convex
 npx convex dev
+```
 
+Gerekirse `.env.local` oluştur:
 
-Gerekirse .env.local içine:
-
+```env
 NEXT_PUBLIC_CONVEX_URL=...
 CONVEX_DEPLOYMENT=...
+```
 
+### 4️⃣ Çalıştır
 
-Daha fazla bilgi: https://docs.convex.dev
-
-4. Geliştirme sunucusu
+```bash
 npm run dev
-# veya yarn dev / pnpm dev / bun dev
+```
 
+Tarayıcıda → http://localhost:3000
 
-Tarayıcıda aç →
-👉 http://localhost:3000
+---
 
-🧪 Script’ler
+## 📜 Script’ler
+
+```jsonc
 {
   "scripts": {
     "dev": "next dev",
@@ -107,52 +117,48 @@ Tarayıcıda aç →
     "lint": "next lint"
   }
 }
+```
 
-🗺️ Yol Haritası
+---
 
- Shared with me sayfası
+## 🗺️ Roadmap
 
- Folder system (klasörler, alt klasörler)
+- [ ] Shared with me  
+- [ ] Folder system  
+- [ ] File preview (PDF/Image)  
+- [ ] Drag & drop upload  
+- [ ] Quota / Storage usage  
+- [ ] Landing Page  
 
- Landing Page
+---
 
- Paylaşım izinleri
+## 🤝 Katkıda Bulunma
 
- Quota / depolama takibi
+1. Forkla  
+2. Yeni branch oluştur  
+3. Commit →  
+   ```bash
+   git commit -m "feat: yeni özellik eklendi"
+   ```
+4. Push et → PR aç
 
- Drag & drop yükleme
+---
 
- Dosya önizlemeleri (image/pdf)
+## 🛡️ Güvenlik
 
-🤝 Katkıda Bulunma
+Herhangi bir güvenlik sorunu bulursanız public issue yerine gizli bir iletişim yöntemini tercih edin.  
+Detaylar için: `SECURITY.md`
 
-Bu repoyu forkla
+---
 
-Yeni bir branch aç:
+## 📄 Lisans
 
-git checkout -b feature/yeni-ozellik
+Bu proje **MIT Lisansı** ile lisanslanmıştır.  
+`LICENSE` dosyasına bakabilirsiniz.
 
+---
 
-Değişikliklerini commit et:
+## 👤 İletişim
 
-git commit -m "feat: yeni özellik eklendi"
-
-
-Branch’i push’la
-
-GitHub üzerinden Pull Request aç
-
-🛡️ Güvenlik
-
-Güvenlik politikaları için SECURITY.md dosyasına bakabilirsin.
-Açık bulursan, public issue yerine güvenli bir kanaldan iletmen tavsiye edilir.
-
-📄 Lisans
-
-Bu proje MIT Lisansı ile lisanslanmıştır.
-Detaylı bilgi için → LICENSE
-
-🙋‍♂️ İletişim
-
-Proje sahibi: @TMBilalTM
-GitHub: https://github.com/TMBilalTM
+**@TMBilalTM**  
+https://github.com/TMBilalTM

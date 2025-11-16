@@ -1,42 +1,181 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+```md
+# 📂 Drive (file-manager)
 
-## Getting Started
+Modern, minimal bir **kişisel bulut sürücü / dosya yöneticisi**.  
+Dosyalarını tarayıcı üzerinden yükle, listele, ara ve yönet – hepsi Next.js + Convex altyapısı ile.
 
-First, run the development server:
+> 🔗 **Canlı Demo:** https://file-bilaltm.vercel.app
+
+---
+
+## ✨ Özellikler
+
+- 📁 **Dosya yükleme & listeleme**  
+  Dosyaları hızlıca yükleyebilir, isim, tarih veya türlerine göre görüntüleyebilirsin.
+
+- 🔍 **Arama & filtreleme**  
+  Gerçek zamanlı arama ile dosyaları kolayca bul.
+
+- ⚡ **Reaktif backend (Convex)**  
+  Veri güncellemeleri anında arayüzde görünür — ekstra refresh gerekmez.
+
+- 🎨 **Modern UI**  
+  Next.js App Router + Tailwind CSS (ve opsiyonel shadcn/ui) ile temiz, minimalist tasarım.
+
+- 🌓 **(Opsiyonel) Karanlık / aydınlık tema**
+  Tailwind temaları ile tamamen özelleştirilebilir.
+
+- 🔐 **(Planlanan) Paylaşılan dosyalar & klasörler**
+  - “Shared with me” sayfası
+  - Klasör desteği
+  - Landing page
+
+> 🧭 Bu repo şu an fonksiyonel bir “Drive” temeli sunar; TODO kısmındaki maddeler ile genişletilebilir.
+
+---
+
+## 🧱 Teknoloji Yığını
+
+- **Next.js** — Modern full-stack React framework  
+- **TypeScript** — Güçlü tip güvenliği  
+- **Convex** — Reaktif ve serverless veri katmanı  
+- **Tailwind CSS** — Hızlı, utility-tabanlı stil  
+- **(Opsiyonel) shadcn/ui** — Modern UI component kütüphanesi
+
+---
+
+## 📁 Proje Yapısı
+
+```txt
+file-manager/
+├─ convex/           # Convex backend (schema, queries, mutations)
+├─ public/           # Statik dosyalar (ikonlar, görseller)
+├─ src/
+│  ├─ app/          # Next.js App Router sayfaları
+│  ├─ components/   # UI bileşenleri
+│  ├─ lib/          # Yardımcı fonksiyonlar / clientlar
+│  └─ styles/       # Global stil dosyaları
+├─ .github/          # Github Actions veya template’ler
+├─ components.json   # shadcn/ui config
+├─ tailwind.config.ts
+├─ next.config.mjs
+├─ package.json
+└─ README.md
+```
+
+---
+
+## 🚀 Kurulum & Çalıştırma
+
+### 1. Depoyu klonla
+
+```bash
+git clone https://github.com/TMBilalTM/file-manager.git
+cd file-manager
+```
+
+### 2. Bağımlılıkları yükle
+
+```bash
+npm install
+# veya
+yarn
+# veya
+pnpm install
+# veya
+bun install
+```
+
+### 3. Convex yapılandırması
+
+Convex kullanımı için bir deployment oluştur:
+
+```bash
+npm install -g convex
+npx convex dev
+```
+
+Gerekirse `.env.local` içine:
+
+```env
+NEXT_PUBLIC_CONVEX_URL=...
+CONVEX_DEPLOYMENT=...
+```
+
+Daha fazla bilgi: https://docs.convex.dev
+
+### 4. Geliştirme sunucusu
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# veya yarn dev / pnpm dev / bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Tarayıcıda aç →  
+👉 http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 🧪 Script’ler
 
-## Learn More
+```jsonc
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  }
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🗺️ Yol Haritası
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- [ ] **Shared with me** sayfası  
+- [ ] **Folder system** (klasörler, alt klasörler)  
+- [ ] **Landing Page**  
+- [ ] Paylaşım izinleri  
+- [ ] Quota / depolama takibi  
+- [ ] Drag & drop yükleme  
+- [ ] Dosya önizlemeleri (image/pdf)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🤝 Katkıda Bulunma
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Forkla  
+2. Branch aç  
+   ```bash
+   git checkout -b feature/yeni-ozellik
+   ```
+3. Commit at  
+   ```bash
+   git commit -m "feat: yeni özellik eklendi"
+   ```
+4. Push’la  
+5. Pull Request aç
 
-## TODO
+---
 
-- shared with me
-- folders
-- landing page
+## 🛡️ Güvenlik
+
+Güvenlik politikaları için `SECURITY.md` dosyasına bakabilirsin.  
+Açık bulursan güvenli bir iletişim kanalı üzerinden iletmen önerilir.
+
+---
+
+## 📄 Lisans
+
+Bu proje **MIT Lisansı** ile lisanslanmıştır.  
+Detaylı bilgi için → [`LICENSE`](./LICENSE)
+
+---
+
+## 🙋‍♂️ İletişim
+
+Proje sahibi: **@TMBilalTM**  
+GitHub: https://github.com/TMBilalTM
+
+```
